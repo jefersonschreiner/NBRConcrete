@@ -1,9 +1,11 @@
 import math
+from Geometria_Viga import geobeam
+from Admensionais import adm
 
-class Matbeam:
+class matbeam:
 
     def __init__(self):
-        self.fck = None
+        fck = None
         self.fyk = None
         self.comb = None
         self.yc = None
@@ -50,7 +52,7 @@ class Matbeam:
             fctksup = (0.39 * (self.fck ** (2/3)))/10
             fctkinf = (0.21 * (self.fck ** (2/3)))/10
 
-            return (fcd, fctkinf, fctksup)
+            return (fcd, fctkinf, fctksup, self.fck)
 
         else:
             fcd = (self.fck / self.yc)/10
@@ -60,25 +62,33 @@ class Matbeam:
             return (fcd, fctkinf, fctksup)
 
     def s_math_exec(self):
-        fyd = self.fyk / self.ys
+        fyd = (self.fyk/10) / self.ys
         es = 21000
 
-        return (fyd, es)
+        return (fyd, es, self.fyk)
 
 
-#Teste de Funcionamento
-
-viga = Matbeam()
-
+#Variáveis da Classe
+viga = matbeam()
 viga.data()
 
-fcd, fctkinf, fctksup = viga.c_math_exec()
-fyd, es = viga.s_math_exec()
+grupo = viga.group_definer()
+fcd, fctkinf, fctksup, fck = viga.c_math_exec()
+fyd, es, fyk = viga.s_math_exec()
 
+#Outras Classes
+geob = geobeam()
+geob.t_math(fcd)
 
+adimen = adm()
+adimen.adimensionais(grupo, fyd, fck, fcd)
+
+#Teste de Funcionamento
+print(f"Fck = {fck:.0f} MPa")
 print(f"Fcd = {fcd:.3f} kN/cm²")
 print(f"FctkInf = {fctkinf:.3f} kN/cm²")
 print(f"FctkSup = {fctksup:.3f} kN/cm²")
+print(f"Fyk = {fyk:.0f} MPa")
 print(f"Fyd = {fyd:.3f} kN/cm²")
 print(f"Es = {es:.0f} mPa")
 

@@ -1,6 +1,6 @@
 import math
 
-class Geobeam:
+class geobeam:
 
     def __init__ (self):
         self.type_beam = None
@@ -14,7 +14,7 @@ class Geobeam:
         print("Verificação da Viga - Defina a Geometria")
 
         while True:
-            self.type_beam = input("Qual o tipo de Vigaw? (Q/T): ").upper()
+            self.type_beam = input("Qual o tipo de Viga? (Q/T): ").upper()
 
             if self.type_beam == 'Q':
                 print("\nInforme as dimensões da viga quadrangular:")
@@ -43,7 +43,7 @@ class Geobeam:
 
         return (wo)
     
-    def t_math(self):
+    def t_math(self, fcd, nc, d):
         
         #Cálculo do Wo
         aw = self.bw * self.h
@@ -58,12 +58,11 @@ class Geobeam:
         wo = (wo1 * wo2) + (wo3 * wo4)
 
         #Verificação das Forças da  Mesa
-        '''
-        mrda = 
-        mrdf =
 
-        '''
-        return (wo)
+        mrdf = nc * (self.hf * self.bf) * (d - (self.hf/2)) * fcd
+        mrda = nc * self.hf * (self.bf - self.bw) * (d - (self.hf/2)) * fcd
+        
+        return (wo, mrda, mrdf)
 
     def calculate_wo(self):
         if self.type_beam == 'Q':
@@ -74,11 +73,20 @@ class Geobeam:
             print("Tipo de viga não definido")
             return None
 
-#Teste
 
-geometria = Geobeam()
-
+#Variáveis da Classe
+geometria = geobeam()
 geometria.geo_define()
-wo = geometria.calculate_wo()
+wo, aux1, aux2 = geometria.calculate_wo()
 
+#Outras Classes
+
+
+#Teste
+print("\nRespostas:")
 print(f"Wo = {wo:.3f} cm³")
+print(f"Mrda = {aux1:.3f} kN.cm")
+print(f"Mrdf = {aux2:.3f} kN.cm")
+
+
+
